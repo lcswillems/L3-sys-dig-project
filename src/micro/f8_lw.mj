@@ -1,0 +1,10 @@
+(*
+	"rs_v" means "R[rs]"
+	"rt_v" means "R[rt]"
+	"rd_v" means "R[rd]"
+*)
+
+f8_lw (rt_v:[32], addr:[16]) = (rd_v:[32]) where
+	(sm,waste) = adder<32>(rt_v,addr.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0,0);
+	rd_v = ram<32,32>(sm,0,sm,rt_v);
+end where

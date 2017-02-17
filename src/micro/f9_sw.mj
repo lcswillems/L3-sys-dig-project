@@ -1,0 +1,32 @@
+(*
+	"rs_v" means "R[rs]"
+	"rt_v" means "R[rt]"
+	"rd_v" means "R[rd]"
+*)
+
+f8h_bitadd(a,b,c_in) = (c,c_out) where
+	c_out = (a & (b + c_in)) + (b & c_in);
+	c = (a ^ b) ^ c_in;
+end where
+
+f8h_adder<n>(a:[n],b:[n]) = (s:[n],c_out) where
+	if (n = 0) then 
+		c_out = 0;
+		s = [];
+	else
+		if (n = 1) then
+			(s,c_out) = f8h_bitadd(a,b,0);
+		else
+			(partial_sum,last_carry) = f8h_adder<n-1>(a[..(n-2)],b[..(n-2)]);
+			(sum_last_bit,c_out) = f8h_bitadd(a[n-1],b[n-1],last_carry);
+			s = partial_sum . sum_last_bit;
+		end if
+	end if
+end where
+
+
+
+f9_sw (rd_v:[32], addr:[16]) = () where
+	(sm,waste) = f8h_adder<32>(rd_v,addr.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0);
+	c = ram<32,32>(sm,1,sm,rd_v);
+end where

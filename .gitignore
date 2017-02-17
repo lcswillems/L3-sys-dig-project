@@ -1,0 +1,5 @@
+src/assembly/_build/*
+src/simulator/_build/*
+src/*.byte
+Slides.tex
+Rapport.tex

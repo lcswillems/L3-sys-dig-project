@@ -1,0 +1,27 @@
+(*
+	"rs_v" means "R[rs]"
+	"rt_v" means "R[rt]"
+	"rd_v" means "R[rd]"
+*)
+
+genere_a<n>(a) = (vect:[n]) where
+	if n = 1 then
+		vect = a
+	else
+		vect = a.(genere_a<n-1> (a))
+	end if
+end where
+
+aux_val<n>(rt_v:[32-n],rs_v:[32] ) = (rd_v:[32]) where
+	if n = 5 then 
+		rd_v = rs_v
+	else
+		rd_v_temp = aux_val<n+1>(rt_v[1..],rs_v);
+		nap_vide = genere_a<2^n>(0);
+		rd_v = mux_n<32>(rt_v[0],rd_v_temp[2^n..].nap_vide,rd_v_temp)
+	end if
+end where
+
+f4_srlv (rs_v:[32], rt_v:[32]) = (rd_v:[32]) where
+ 	rd_v = aux_val<0>(rt_v,rs_v)
+end where

@@ -1,0 +1,158 @@
+(* Micro-processor helper *)
+
+fulladder(a,b,c) = (s, r) where
+	s=(a ^ b) ^ c;
+	r=(a & b) + ((a ^ b) & c)
+end where
+
+cmp(a:[32],b:[32]) = e where
+	e1 = xor_n<32>(a, b);
+	e = e1[0] + e1[1] + e1[2] + e1[3] + e1[4] + e1[5] + e1[6] + e1[7] + e1[8] + e1[9] + e1[10] + e1[11] + e1[12] + e1[13] + e1[14] + e1[15] + e1[16] + e1[17] + e1[18] + e1[19] + e1[20] + e1[21] + e1[22] + e1[23] + e1[24] + e1[25] + e1[26] + e1[27] + e1[28] + e1[29] + e1[30] + e1[31];
+end where
+
+adder<n>(a:[n], b:[n], c_in) = (o:[n], c_out) where
+	if n = 0 then 
+		o = [] ;
+		c_out = 0
+	else
+		(s_n1, c_n1) = adder<n-1>(a[..n-2], b[..n-2], c_in);
+		(s_n, c_out) = fulladder(a[n-1], b[n-1], c_n1);
+		o = s_n1.s_n
+	end if
+end where
+
+mux_10_nappes<n> (cond:[4], a0:[n], a1:[n], a2:[n], a3:[n], a4:[n], a5:[n], a6:[n], a7:[n], a8:[n], a9:[n]) = (r:[n]) where
+	b0 = mux_n<n> (cond[0], a1, a0);
+	b1 = mux_n<n> (cond[0], a3, a2);
+	b2 = mux_n<n> (cond[0], a5, a4);
+	b3 = mux_n<n> (cond[0], a7, a6);
+	b4 = mux_n<n> (cond[0], a9, a8);
+	c0 = mux_n<n> (cond[1], b1, b0);
+	c1 = mux_n<n> (cond[1], b3, b2);
+	c2 = b4;
+	d0 = mux_n<n> (cond[2], c1, c0);
+	d1 = c2;
+	r = mux_n<n> (cond[3], d1, d0);
+end where
+
+mux_16_nappes<n> (cond:[4], a0:[n], a1:[n], a2:[n], a3:[n], a4:[n], a5:[n], a6:[n], a7:[n], a8:[n], a9:[n], a10:[n], a11:[n], a12:[n], a13:[n], a14:[n], a15:[n]) = (r:[n]) where
+	b0 = mux_n<n> (cond[0], a1, a0);
+	b1 = mux_n<n> (cond[0], a3, a2);
+	b2 = mux_n<n> (cond[0], a5, a4);
+	b3 = mux_n<n> (cond[0], a7, a6);
+	b4 = mux_n<n> (cond[0], a9, a8);
+	b5 = mux_n<n> (cond[0], a11, a10);
+	b6 = mux_n<n> (cond[0], a13, a12);
+	b7 = mux_n<n> (cond[0], a15, a14);
+	c0 = mux_n<n> (cond[1], b1, b0);
+	c1 = mux_n<n> (cond[1], b3, b2);
+	c2 = mux_n<n> (cond[1], b5, b4);
+	c3 = mux_n<n> (cond[1], b7, b6);
+	d0 = mux_n<n> (cond[2], c1, c0);
+	d1 = mux_n<n> (cond[2], c3, c2);
+	r = mux_n<n> (cond[3], d1, d0);
+end where
+
+(* Instructions defined in the report *)
+
+#include "f0_li.mj"
+#include "f1_addiu.mj"
+#include "f2_bne.mj"
+#include "f3_sltu.mj"
+#include "f4_srlv.mj"
+#include "f5_and.mj"
+#include "f6_or.mj"
+#include "f8_lw.mj"
+#include "f9_sw.mj"
+
+(* Micro-processor core *)
+
+main () = (r0:[32], r1:[32], r2:[32], r3:[32], r4:[32], r5:[32], r6:[32], r7:[32], r8:[32], r9:[32], r10:[32], r11:[32], r12:[32], r13:[32], r14:[32], r15:[32]) where
+	(* Load the ROM word address and the registers *)
+
+	addr_c = reg_n<16>(addr);
+	r0_c = reg_n<32>(r0);
+	r1_c = reg_n<32>(r1);
+	r2_c = reg_n<32>(r2);
+	r3_c = reg_n<32>(r3);
+	r4_c = reg_n<32>(r4);
+	r5_c = reg_n<32>(r5);
+	r6_c = reg_n<32>(r6);
+	r7_c = reg_n<32>(r7);
+	r8_c = reg_n<32>(r8);
+	r9_c = reg_n<32>(r9);
+	r10_c = reg_n<32>(r10);
+	r11_c = reg_n<32>(r11);
+	r12_c = reg_n<32>(r12);
+	r13_c = reg_n<32>(r13);
+	r14_c = reg_n<32>(r14);
+	r15_c = reg_n<32>(r15);
+
+	(* Load instruction *)
+
+	o = rom<16, 32>(addr_c);
+
+	(* Load opcode, R[rs], R[rt], R[sd] and imm *)
+
+	opcode = o[28..31];
+	rd_v = mux_16_nappes<32>(o[16..19], r0_c, r1_c, r2_c, r3_c, r4_c, r5_c, r6_c, r7_c, r8_c, r9_c, r10_c, r11_c, 	r12_c, r13_c, r14_c, r15_c);
+	rt_v = mux_16_nappes<32>(o[20..23], r0_c, r1_c, r2_c, r3_c, r4_c, r5_c, r6_c, r7_c, r8_c, r9_c, r10_c, r11_c, 	r12_c, r13_c, r14_c, r15_c);
+	rs_v = mux_16_nappes<32>(o[24..27], r0_c, r1_c, r2_c, r3_c, r4_c, r5_c, r6_c, r7_c, r8_c, r9_c, r10_c, r11_c, 	r12_c, r13_c, r14_c, r15_c);
+	imm = o[0..15];
+
+	(* Compute R[rd] and the next ROM word address for each instruction *)
+
+	(addr_c2, waste) = adder<16>(addr_c,1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0,0);
+
+	addr_v0 = addr_c2;
+	rd_v0 = f0_li(imm);
+	addr_v1 = addr_c2;
+	rd_v1 = f1_addiu(rs_v, imm);
+	addr_v2 = f2_bne(rs_v, rd_v, imm, addr_c2);
+	rd_v2 = rd_v;
+	addr_v3 = addr_c2;
+	rd_v3 = f3_sltu(rs_v, rt_v);
+	addr_v4 = addr_c2;
+	rd_v4 = f4_srlv(rs_v, rt_v);
+	addr_v5 = addr_c2;
+	rd_v5 = f5_and(rs_v, rt_v);
+	addr_v6 = addr_c2;
+	rd_v6 = f6_or(rs_v, rt_v);
+	addr_v7 = imm;
+	rd_v7 = rd_v;
+	addr_v8 = addr_c2;
+	rd_v8 = f8_lw(rs_v, imm);
+	addr_v9 = addr_c2;
+	rd_v9 = rd_v;
+
+	(*
+		TODO :
+			- f8_lw ou simulateur qui a un problème
+			- call f9_sw(rd_v, imm) only if sw is effectively called
+	*)
+
+	(* Select R[rd] and the next ROM word address of the good instruction *)
+
+	addr_vf = mux_10_nappes<16>(opcode, addr_v0, addr_v1, addr_v2, addr_v3, addr_v4, addr_v5, addr_v6, addr_v7, addr_v8, addr_v9);
+	rd_vf = mux_10_nappes<32>(opcode, rd_v0, rd_v1, rd_v2, rd_v3, rd_v4, rd_v5, rd_v6, rd_v7, rd_v8, rd_v9);
+
+	(* Set R[rd] in the "rd" register and the next ROM word address in the ROM word address register *)
+
+	addr = addr_vf;
+	r0 = mux_n<32>(o[19], r0_c, mux_n<32>(o[18], r0_c, mux_n<32>(o[17], r0_c, mux_n<32>(o[16], r0_c, rd_vf))));
+	r1 = mux_n<32>(o[19], r1_c, mux_n<32>(o[18], r1_c, mux_n<32>(o[17], r1_c, mux_n<32>(not(o[16]), r1_c, rd_vf))));
+	r2 = mux_n<32>(o[19], r2_c, mux_n<32>(o[18], r2_c, mux_n<32>(not(o[17]), r2_c, mux_n<32>(o[16], r2_c, rd_vf))));
+	r3 = mux_n<32>(o[19], r3_c, mux_n<32>(o[18], r3_c, mux_n<32>(not(o[17]), r3_c, mux_n<32>(not(o[16]), r3_c, rd_vf))));
+	r4 = mux_n<32>(o[19], r4_c, mux_n<32>(not(o[18]), r4_c, mux_n<32>(o[17], r4_c, mux_n<32>(o[16], r4_c, rd_vf))));
+	r5 = mux_n<32>(o[19], r5_c, mux_n<32>(not(o[18]), r5_c, mux_n<32>(o[17], r5_c, mux_n<32>(not(o[16]), r5_c, rd_vf))));
+	r6 = mux_n<32>(o[19], r6_c, mux_n<32>(not(o[18]), r6_c, mux_n<32>(not(o[17]), r6_c, mux_n<32>(o[16], r6_c, rd_vf))));
+	r7 = mux_n<32>(o[19], r7_c, mux_n<32>(not(o[18]), r7_c, mux_n<32>(not(o[17]), r7_c, mux_n<32>(not(o[16]), r7_c, rd_vf))));
+	r8 = mux_n<32>(not(o[19]), r8_c, mux_n<32>(o[18], r8_c, mux_n<32>(o[17], r8_c, mux_n<32>(o[16], r8_c, rd_vf))));
+	r9 = mux_n<32>(not(o[19]), r9_c, mux_n<32>(o[18], r9_c, mux_n<32>(o[17], r9_c, mux_n<32>(not(o[16]), r9_c, rd_vf))));
+	r10 = mux_n<32>(not(o[19]), r10_c, mux_n<32>(o[18], r10_c, mux_n<32>(not(o[17]), r10_c, mux_n<32>(o[16], r10_c, rd_vf))));
+	r11 = mux_n<32>(not(o[19]), r11_c, mux_n<32>(o[18], r11_c, mux_n<32>(not(o[17]), r11_c, mux_n<32>(not(o[16]), r11_c, rd_vf))));
+	r12 = mux_n<32>(not(o[19]), r12_c, mux_n<32>(not(o[18]), r12_c, mux_n<32>(o[17], r12_c, mux_n<32>(o[16], r12_c, rd_vf))));
+	r13 = mux_n<32>(not(o[19]), r13_c, mux_n<32>(not(o[18]), r13_c, mux_n<32>(o[17], r13_c, mux_n<32>(not(o[16]), r13_c, rd_vf))));
+	r14 = mux_n<32>(not(o[19]), r14_c, mux_n<32>(not(o[18]), r14_c, mux_n<32>(not(o[17]), r14_c, mux_n<32>(o[16], r14_c, rd_vf))));
+	r15 = mux_n<32>(not(o[19]), r15_c, mux_n<32>(not(o[18]), r15_c, mux_n<32>(not(o[17]), r15_c, mux_n<32>(not(o[16]), r15_c, rd_vf))));
+end where

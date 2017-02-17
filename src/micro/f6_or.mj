@@ -1,0 +1,10 @@
+(*
+	"rs_v" means "R[rs]"
+	"rt_v" means "R[rt]"
+	"rd_v" means "R[rd]"
+*)
+
+
+f6_or (rs_v:[32], rt_v:[32]) = (rd_v:[32]) where
+    rd_v = or_n<32>(rs_v, rt_v);
+end where

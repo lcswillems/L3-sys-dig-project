@@ -1,0 +1,9 @@
+(*
+	"rs_v" means "R[rs]"
+	"rt_v" means "R[rt]"
+	"rd_v" means "R[rd]"
+*)
+
+f0_li (imm:[16]) = (rd_v:[32]) where
+	rd_v =imm.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0
+end where

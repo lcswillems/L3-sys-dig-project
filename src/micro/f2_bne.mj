@@ -1,0 +1,15 @@
+(*
+	"rs_v" means "R[rs]"
+	"rt_v" means "R[rt]"
+	"rd_v" means "R[rd]"
+*)
+
+f2_help_16(of:[16],e) = (eof:[16]) where
+	eof = (of[0] & e) . (of[1] & e) . (of[2] & e) . (of[3] & e) . (of[4] & e) . (of[5] & e) . (of[6] & e) . (of[7] & e) . (of[8] & e) . (of[9] & e) . (of[10] & e) . (of[11] & e) . (of[12] & e) . (of[13] & e) . (of[14] & e) . (of[15] & e);
+end where
+
+f2_bne (rs_v:[32], rd_v:[32], offset:[16], addr_i:[16]) = (addr_f:[16]) where
+	e = cmp(rs_v,rd_v);
+	effective_offset = f2_help_16(offset,e);
+	(addr_f,waste) = adder<16>(addr_i,effective_offset,0);
+end where
