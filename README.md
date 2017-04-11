@@ -1,3 +1,5 @@
+Ce projet consiste en la réalisation, d'abord, d'un simulateur de netlist, puis d'un microprocesseur (écrit en netlist) et de son assembleur, et enfin, du programme d'une horloge, exécuté sur le microprocesseur. Ce projet a été réalisé par [Lucas Willems](http://www.lucaswillems.com), Josselin Giet et Elie Studnia pour le cours de [Système digital : de l'algorithme au circuit](http://perso.telecom-paristech.fr/~guilley/ENS/program_2016_2017.html) donné par Sylvain Guilley pour la L3 d'informatique de l'ENS Ulm.
+
 # Structure du projet
 
 Le projet (dans le dossier `src`) contient un `Makefile` permettant d'exécuter les 5 commandes :
