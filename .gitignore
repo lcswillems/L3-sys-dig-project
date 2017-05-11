@@ -1,5 +1,4 @@
+com/*
 src/assembly/_build/*
 src/simulator/_build/*
 src/*.byte
-Diapo.tex
-Rapport.tex
