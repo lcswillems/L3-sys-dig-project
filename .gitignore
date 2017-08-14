@@ -1,4 +1,4 @@
 com/*
-src/assembly/_build/*
-src/simulator/_build/*
-src/*.byte
+code/assembly/_build/*
+code/simulator/_build/*
+code/*.byte
