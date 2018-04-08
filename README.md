@@ -1,6 +1,8 @@
+# Un microprocesseur et son assembleur
+
 Ce projet consiste en la réalisation, d'abord, d'un simulateur de netlist, puis d'un microprocesseur (écrit en netlist) et de son assembleur, et enfin, du programme d'une horloge, exécuté sur le microprocesseur. Ce projet a été réalisé par [Lucas Willems](http://www.lucaswillems.com), Josselin Giet et Elie Studnia pour le cours de [Système digital : de l'algorithme au circuit](http://perso.telecom-paristech.fr/~guilley/ENS/program_2016_2017.html) donné par Sylvain Guilley pour la L3 d'informatique de l'ENS Ulm.
 
-# Structure du projet
+## Structure du projet
 
 Le projet (dans le dossier `src`) contient un `Makefile` permettant d'exécuter les 5 commandes :
 - `make assembly` : pour compiler l'assembleur
@@ -17,7 +19,7 @@ Et 5 dossiers :
 - `simulator` contenant le simulateur de netlist
 - `clock` contenant les fichiers propres à l'horloge
 
-# Assembleur
+## Assembleur
 
 Pour compiler un fichier assembleur en code machine, il faut exécuter le fichier `assembly/assembly.byte` avec le paramètre suivant :
 
@@ -29,13 +31,13 @@ Voici un exemple d'utilisation depuis l'origine du projet :
 > ./assembly.byte tests/clock-without-mod.s
 ```
 
-# Microprocesseur
+## Microprocesseur
 
 Le dossier `micro` contient le circuit du microprocesseur `main.net`.
 
-# Simulateur
+## Simulateur
 
-## Utilisation
+### Utilisation
 
 Pour utiliser le simulateur de netlist, il faut exécuter le fichier `simulator/simulator.byte` avec les paramètres suivants :
 
@@ -51,14 +53,14 @@ Voici un exemple d'utilisation depuis l'origine du projet :
 > ./simulator.byte micro/main.net -n 1 -rom tests/clock-without-mod.byte
 ```
 
-## Conventions
+### Conventions
 
 Le simulateur de netlist a été réalisé avec les conventions suivantes :
 
 - Le fil d'index 0 d'une nappe de fils correspond au bit de poids faible
 - La RAM est de taille variable : à chaque fois que le programme rencontre une instance de RAM, si la taille de cette RAM est supérieure à celle déjà en mémoire, alors la RAM en mémoire est étendu avec des bouléens à `false`
 
-# L'horloge
+## L'horloge
 
 Le dossier `clock` contient les fichiers propres à l'horloge c'est à dire son code assembleur, son binaire et son afficheur. Pour utiliser l'afficheur de l'horloge, il faut utiliser la commande suivante en étant placé à la racine du projet :
 
