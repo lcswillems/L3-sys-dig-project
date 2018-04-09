@@ -49,8 +49,8 @@ Pour utiliser le simulateur de netlist, il faut exécuter le fichier `simulator/
 
 Voici un exemple d'utilisation depuis l'origine du projet :
 
-```bash
-> ./simulator.byte micro/main.net -n 1 -rom tests/clock-without-mod.byte
+```
+./simulator.byte micro/main.net -n 1 -rom tests/clock-without-mod.byte
 ```
 
 ### Conventions
@@ -64,12 +64,12 @@ Le simulateur de netlist a été réalisé avec les conventions suivantes :
 
 Le dossier `clock` contient les fichiers propres à l'horloge c'est à dire son code assembleur, son binaire et son afficheur. Pour utiliser l'afficheur de l'horloge, il faut utiliser la commande suivante en étant placé à la racine du projet :
 
-```bash
-> python3 micro/main.py
+```
+python3 micro/main.py
 ```
 
 Par défaut, l'horloge fonctionne en mode `glock`. Pour activer le mode `synchrone`, il rajoute l'option `s` :
 
-```bash
-> python3 micro/main.py -s
+```
+python3 micro/main.py -s
 ```
